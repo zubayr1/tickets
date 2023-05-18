@@ -1,10 +1,13 @@
 import React from 'react'
 import { Button, Grid, Input } from 'semantic-ui-react'
 import { useState } from 'react';
+import { useNavigate  } from "react-router-dom";
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   function handleusername(e)
   {
@@ -20,8 +23,8 @@ function Login() {
   {
     if (username!=="" && password!=="")
     {
-        console.log(username);
-        console.log(password);
+      //login
+        navigate('/dashboard');
     }
     
     
@@ -29,7 +32,6 @@ function Login() {
 
   return (
     <div> 
-
            
         <Grid padded centered>  
           
@@ -39,17 +41,17 @@ function Login() {
               </Grid.Column>
               </Grid.Row>
 
-          <Grid.Row centered>
-            <Grid.Column>
-              <Input fluid type='username' placeholder='Username' onChange={e => handleusername(e.target.value)}/>
-            </Grid.Column>
-          </Grid.Row>
+            <Grid.Row centered>
+              <Grid.Column>
+                <Input fluid type='username' placeholder='Username' onChange={e => handleusername(e.target.value)}/>
+              </Grid.Column>
+            </Grid.Row>
 
-          <Grid.Row centered>            
-            <Grid.Column>
-              <Input fluid type='password' placeholder='Password' onChange={e => handlepassword(e.target.value)}/>
-            </Grid.Column>
-          </Grid.Row>
+            <Grid.Row centered>            
+              <Grid.Column>
+                <Input fluid type='password' placeholder='Password' onChange={e => handlepassword(e.target.value)}/>
+              </Grid.Column>
+            </Grid.Row>
 
                      
             <Grid.Row>

@@ -1,6 +1,9 @@
 import React from 'react'
-import { Button, Grid, Input } from 'semantic-ui-react'
+import { Button, Grid, Input, Message } from 'semantic-ui-react'
 import { useState } from 'react';
+
+import {createUserWithEmailAndPassword} from 'firebase/auth';
+import auth from '../firebase-config';
 
 function Signup() {
   const [fullname, setFullname] = useState('');
@@ -9,6 +12,7 @@ function Signup() {
   const [confpassword, setConfPassword] = useState('');
   const [key, setKey] = useState('');
 
+  const [messageType, setMessageType] = useState(0);
   
   function handlefullname(e)
   {
@@ -35,23 +39,76 @@ function Signup() {
     setKey(e);
   }
 
+  const signingup = async() =>
+  {
+    try
+    {
+      const user = await createUserWithEmailAndPassword(auth, username, password);
+    }
+    catch (error)
+    {
+
+    }
+    
+  }
 
 
   function handlesubmit()
   {
-    if ((fullname!=="" && username!=="" && password!=="" && key!=="") && (password===confpassword))
+    if (fullname!=="" && username!=="" && password!=="" && key!=="")
     {
-        console.log(username);
-        console.log(password);
-    }
-    
+      if((password===confpassword) && password.length>=6)
+      {
+        //register
+        signingup();
+        setMessageType(1);
+      }
+      else if (password!==confpassword)
+      {
+        setMessageType(2);
+      }
+      else if (password.length<6)    
+      {
+        setMessageType(3);
+      }            
+    }   
     
   }
 
-  return (
-    <div> 
+  let display_message = 
+  <div>
 
-           
+  </div>;
+
+  if(messageType===1)
+  {
+    display_message = 
+    <Message positive>
+      <Message.Header>Sign Up Done</Message.Header>
+        <p>
+          Please login with the credentials
+        </p>
+    </Message>
+  }
+  else if (messageType===2)
+  {
+    display_message = 
+    <Message negative>
+      <Message.Header>Passwords are different</Message.Header>
+        <p>Please fix the passwords and try again</p>
+    </Message>
+  }
+  else if (messageType===3)
+  {
+    display_message = 
+    <Message negative>
+      <Message.Header>Password is too short</Message.Header>
+        <p>Please increase password length and try again</p>
+    </Message>
+  }
+  
+  return (
+    <div>            
         <Grid padded centered>  
           
             <Grid.Row centered>
@@ -93,10 +150,14 @@ function Signup() {
                      
             <Grid.Row>
               <Button primary onClick={()=> handlesubmit()}>Submit</Button>
-            </Grid.Row>            
+            </Grid.Row>   
+
+            <Grid.Row>
+              {display_message}  
+            </Grid.Row>         
           
         </Grid>
-        </div>
+    </div>
   )
 }
 

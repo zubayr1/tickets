@@ -3,7 +3,7 @@ import { Button, Grid, Input, Message } from 'semantic-ui-react'
 import { useState } from 'react';
 
 import {createUserWithEmailAndPassword} from 'firebase/auth';
-import auth from '../firebase-config';
+import {auth} from '../firebase-config';
 
 function Signup() {
   const [fullname, setFullname] = useState('');
@@ -43,11 +43,11 @@ function Signup() {
   {
     try
     {
-      const user = await createUserWithEmailAndPassword(auth, username, password);
+      await createUserWithEmailAndPassword(auth, username, password);
     }
     catch (error)
     {
-
+      setMessageType(4);
     }
     
   }
@@ -104,6 +104,14 @@ function Signup() {
     <Message negative>
       <Message.Header>Password is too short</Message.Header>
         <p>Please increase password length and try again</p>
+    </Message>
+  }
+  else if (messageType===4)
+  {
+    display_message = 
+    <Message negative>
+      <Message.Header>Authentication failed</Message.Header>
+        <p>Something went wrong while signing up. Please try again</p>
     </Message>
   }
   

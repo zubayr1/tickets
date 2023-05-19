@@ -1,11 +1,16 @@
 import React from 'react'
-import { Button, Grid, Input } from 'semantic-ui-react'
+import { Button, Grid, Input, Message } from 'semantic-ui-react'
 import { useState } from 'react';
 import { useNavigate  } from "react-router-dom";
+
+import {signInWithEmailAndPassword} from 'firebase/auth';
+import {auth} from '../firebase-config';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const [messageType, setMessageType] = useState(0);
 
   const navigate = useNavigate();
 
@@ -19,16 +24,45 @@ function Login() {
     setPassword(e);
   }
 
-  function handlesubmit()
+  
+  const handlesubmit = async() =>
   {
     if (username!=="" && password!=="")
     {
-      //login
-        navigate('/dashboard');
+      //login        
+
+        try
+        {
+          await signInWithEmailAndPassword(auth, username, password);
+
+          localStorage.setItem('user', auth.currentUser.email);
+
+          navigate('/dashboard');
+        }
+        catch (error)
+        {
+          setMessageType(2);
+        }
     }
     
     
   }
+
+  let display_message = 
+  <div>
+
+  </div>;
+
+if(messageType===2)
+{
+  display_message = 
+  <Message negative>
+    <Message.Header>Authentication failed</Message.Header>
+      <p>
+        Something went wrong while login. Please try again
+      </p>
+  </Message>
+}
 
   return (
     <div> 
@@ -66,7 +100,11 @@ function Login() {
                     <p class="FuturaFont" style={{color:'#104161', fontWeight:'bolder'}}>forgot password?</p>
                 </Grid.Column>
               
-            </Grid.Row>           
+            </Grid.Row>   
+
+            <Grid.Row>
+              {display_message}  
+            </Grid.Row>         
           
         </Grid>
         </div>

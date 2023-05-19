@@ -10,6 +10,7 @@ import Login from './login'
 import Signup from './signup'
 
 function Register() {
+
   return (
     <div>
         <Grid centered>

@@ -8,8 +8,7 @@ function Home() {
   const navigate = useNavigate();
 
   useEffect(() => {    
-    console.log(userinfo);
-    if ((userinfo!==null) || (userinfo!=="null"))
+    if ((userinfo!==null) && (userinfo!=="null") && (userinfo!==""))
     {
       navigate('/dashboard');
     }
@@ -18,7 +17,7 @@ function Home() {
       navigate('/register');
     }
 
-  });
+  }, [userinfo, navigate]);
 
 
   return (
